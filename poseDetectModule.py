@@ -43,76 +43,39 @@ class poseDetect:
 
     def get_needed_landmarks(self):
         head_landmark = self.pose_landmarks.landmark[0]
-        head = {
-            'x': head_landmark.x,
-            'y': head_landmark.y,
-            # 'z': head_landmark.z,
-            # 'visibility': head_landmark.visibility,
-        }
 
         left_shoulder = self.pose_landmarks.landmark[11]
         right_shoulder = self.pose_landmarks.landmark[12]
-        shoulder = {
-            'x': (left_shoulder.x + right_shoulder.x) / 2,
-            'y': (left_shoulder.y + right_shoulder.y) / 2,
-            # 'z': (left_shoulder.z + right_shoulder.z) / 2,
-            # 'visibility': (left_shoulder.visibility + right_shoulder.visibility) / 2
-        }
 
         left_hip = self.pose_landmarks.landmark[23]
         right_hip = self.pose_landmarks.landmark[24]
-        hip = {
-            'x': (left_hip.x + right_hip.x) / 2,
-            'y': (left_hip.y + right_hip.y) / 2,
-            # 'z': (left_hip.z + right_hip.z) / 2,
-            # 'visibility': (left_hip.visibility + right_hip.visibility) / 2
-        }
 
         left_knee = self.pose_landmarks.landmark[25]
         right_knee = self.pose_landmarks.landmark[26]
-        knee = {
-            'x': (left_knee.x + right_knee.x) / 2,
-            'y': (left_knee.y + right_knee.y) / 2,
-            # 'z': (left_knee.z + right_knee.z) / 2,
-            # 'visibility': (left_knee.visibility + right_knee.visibility) / 2
-        }
 
-        left_foot = self.pose_landmarks.landmark[31]
-        right_foot = self.pose_landmarks.landmark[32]
-        foot = {
-            'x': (left_foot.x + right_foot.x) / 2,
-            'y': (left_foot.y + right_foot.y) / 2,
-            # 'z': (left_foot.z + right_foot.z) / 2,
-            # 'visibility': (left_foot.visibility + right_foot.visibility) / 2
-        }
+        left_foot = self.pose_landmarks.landmark[27]
+        right_foot = self.pose_landmarks.landmark[28]
+
+        head = {'x': head_landmark.x, 'y': head_landmark.y}
+        shoulder = {'x': (left_shoulder.x + right_shoulder.x) / 2, 'y': (left_shoulder.y + right_shoulder.y) / 2}
+        hip = {'x': (left_hip.x + right_hip.x) / 2, 'y': (left_hip.y + right_hip.y) / 2}
+        knee = {'x': (left_knee.x + right_knee.x) / 2, 'y': (left_knee.y + right_knee.y) / 2}
+        foot = {'x': (left_foot.x + right_foot.x) / 2, 'y': (left_foot.y + right_foot.y) / 2}
+
+        landmarks = [head, shoulder, hip, knee, foot]
 
         h, w, _ = self.frame.shape
+        for i in range(len(landmarks) - 1):
+            start_point = (int(landmarks[i]['x'] * w), int(landmarks[i]['y'] * h))
+            end_point = (int(landmarks[i + 1]['x'] * w), int(landmarks[i + 1]['y'] * h))
 
-        head_point = (int(head['x'] * w), int(head['y'] * h))
-        shoulder_point = (int(shoulder['x'] * w), int(shoulder['y'] * h))
-        hip_point = (int(hip['x'] * w), int(hip['y'] * h))
-        knee_point = (int(knee['x'] * w), int(knee['y'] * h))
-        foot_point = (int(foot['x'] * w), int(foot['y'] * h))
+            cv2.line(self.frame, start_point, end_point, self.color['cyan'], 2)
+            cv2.circle(self.frame, start_point, 5, self.color['cyan'], cv2.FILLED)
 
-        cv2.line(self.frame, head_point, shoulder_point, self.color['red'], 2)
-        cv2.line(self.frame, shoulder_point, hip_point, self.color['green'], 2)
-        cv2.line(self.frame, hip_point, knee_point, self.color['blue'], 2)
-        cv2.line(self.frame, knee_point, foot_point, self.color['yellow'], 2)
-        cv2.circle(self.frame, head_point, 5, self.color['cyan'], cv2.FILLED)
-        cv2.circle(self.frame, shoulder_point, 5, self.color['cyan'], cv2.FILLED)
-        cv2.circle(self.frame, hip_point, 5, self.color['cyan'], cv2.FILLED)
-        cv2.circle(self.frame, knee_point, 5, self.color['cyan'], cv2.FILLED)
+        foot_point = (int(landmarks[-1]['x'] * w), int(landmarks[-1]['y'] * h))
         cv2.circle(self.frame, foot_point, 5, self.color['cyan'], cv2.FILLED)
 
-        returnValue = {
-            'head': head_point,
-            'shoulder': shoulder_point,
-            'hip': hip_point,
-            'knee': knee_point,
-            'foot': foot_point,
-        }
-
-        return returnValue
+        return landmarks
 
     def draw_landmarks(self, fullDraw=True):
         if fullDraw:
