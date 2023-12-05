@@ -1,8 +1,9 @@
 from poseDetectModule import poseDetect
 from fallCalculation import fallCalculation
+from callHelp import callHelp
+
 import cv2
 import time
-import math
 
 
 class VideoProcessor:
@@ -75,22 +76,15 @@ class VideoProcessor:
         cv2.destroyAllWindows()
 
     def where_magic_happens(self, frame):
-
-        ACEPTABLE_STANDING_DEGREES = 45
-
         if self.pose_detector.detect(frame):
-            landmarks = self.pose_detector.get_needed_landmarks()
-            head, shoulder, hip, knee, foot = [landmark for landmark in landmarks]
+            self.fall_calculator.setValue(self.pose_detector.get_needed_landmarks())
 
-            posture_radian = math.atan2(foot['y'] - head['y'], foot['x'] - head['x'])
-            posture_degrees = math.degrees(posture_radian)
-
-            if (head['y'] < hip['y'] and hip['y'] < knee['y'] and knee['y'] < foot['y'] and self.fall_calculator.isBetween(posture_degrees, ACEPTABLE_STANDING_DEGREES, ACEPTABLE_STANDING_DEGREES + 90)):
+            if self.fall_calculator.pose1():
                 self.pose_detector.draw_bbox('standing', 'green')
-            elif (head['y'] > shoulder['y'] and shoulder['y'] > hip['y'] and hip['y'] > knee['y'] and knee['y'] > foot['y'] and self.fall_calculator.isBetween(posture_degrees, ACEPTABLE_STANDING_DEGREES, ACEPTABLE_STANDING_DEGREES + 90)):
-                self.pose_detector.draw_bbox('หกสูง', 'blue')
             else:
                 self.pose_detector.draw_bbox('falling', 'red')
+                self.fall_calculator.pose0()
+                callHelp()
 
     def run(self):
         while self.cap.isOpened():
@@ -107,6 +101,6 @@ class VideoProcessor:
 
 
 if __name__ == '__main__':
-    video_name = '5.mp4'
+    video_name = '1.mp4'
     video_processor = VideoProcessor(video_name)
     video_processor.run()
