@@ -18,16 +18,6 @@ class poseDetect:
 
         self.frame = None
         self.pose_landmarks = None
-        self.color = {
-            'red': (0, 0, 255),
-            'green': (0, 255, 0),
-            'blue': (255, 0, 0),
-            'yellow': (255, 255, 0),
-            'cyan': (0, 255, 255),
-            'magenta': (255, 0, 255),
-            'white': (255, 255, 255),
-            'orange': (255, 165, 0),
-        }
 
     def detect(self, frame):
         processFrame = self.pose.process(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
@@ -68,11 +58,11 @@ class poseDetect:
             start_point = (int(landmarks[i]['x'] * w), int(landmarks[i]['y'] * h))
             end_point = (int(landmarks[i + 1]['x'] * w), int(landmarks[i + 1]['y'] * h))
 
-            cv2.line(self.frame, start_point, end_point, self.color['cyan'], 2)
-            cv2.circle(self.frame, start_point, 5, self.color['cyan'], cv2.FILLED)
+            cv2.line(self.frame, start_point, end_point, (255, 0, 0), 2)
+            cv2.circle(self.frame, start_point, 5,  (255, 0, 0), cv2.FILLED)
 
         foot_point = (int(landmarks[-1]['x'] * w), int(landmarks[-1]['y'] * h))
-        cv2.circle(self.frame, foot_point, 5, self.color['cyan'], cv2.FILLED)
+        cv2.circle(self.frame, foot_point, 5,  (255, 0, 0), cv2.FILLED)
 
         return landmarks
 
@@ -91,14 +81,14 @@ class poseDetect:
             cx, cy = int(
                 self.pose_landmarks.landmark[id].x * w), int(self.pose_landmarks.landmark[id].y * h)
             text = f'id: {id}'
-            cv2.putText(self.frame, text, (cx, cy + 20), cv2.FONT_HERSHEY_SIMPLEX, 0.50, self.color['red'], 1)
+            cv2.putText(self.frame, text, (cx, cy + 20), cv2.FONT_HERSHEY_SIMPLEX, 0.50, (255, 0, 0), 1)
 
-    def draw_bbox(self, text=False, color='green', margin=0):
+    def draw_bbox(self, text=False, color=(0, 255, 0), margin=0):
         bbox = self.calculate_bbox(margin)
         if bbox:
-            cv2.rectangle(self.frame, bbox[0], bbox[1], self.color[color], 2)
+            cv2.rectangle(self.frame, bbox[0], bbox[1], color, 2)
             if text:
-                cv2.putText(self.frame, text, (bbox[0][0], bbox[0][1] - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, self.color[color], 2)
+                cv2.putText(self.frame, text, (bbox[0][0], bbox[0][1] - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
 
     def calculate_bbox(self, margin=0):
         h, w, _ = self.frame.shape
