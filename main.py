@@ -98,13 +98,13 @@ class VideoProcessor:
                         self.fall_calculator.setTotalStandToFall_time()
 
                     if self.fall_calculator.getTotalStandToFall_time() < 1:
-                        self.pose_detector.draw_bbox(f'Falling ({fallTime:.2f} s)', self.color['red'])
+                        self.pose_detector.draw_bbox(f'Fall ({fallTime:.2f} s)', self.color['red'])
                         if fallTime > 5 and not self.callHelp.isCall():
                             self.callHelp.call()
                     else:
                         self.pose_detector.draw_bbox('Laying', self.color['orange'])
                 else:
-                    self.pose_detector.draw_bbox('Moving', self.color['yellow'])
+                    self.pose_detector.draw_bbox('Falling', self.color['yellow'])
                     self.fall_calculator.resetFall_time()
                     self.callHelp.resetCall()
                     self.fall_calculator.setTotalStandToFall_status(True)
@@ -124,6 +124,6 @@ class VideoProcessor:
 
 
 if __name__ == '__main__':
-    video_name = '4.mp4'
+    video_name = 'fall2.mov'
     video_processor = VideoProcessor(video_name)
     video_processor.run()

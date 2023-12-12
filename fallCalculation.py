@@ -5,7 +5,8 @@ import time
 class fallCalculation:
 
     def __init__(self) -> None:
-        self.ACEPTABLE_STANDING_DEGREES = (45, 145)
+        self.ACEPTABLE_STANDING_DEGREES = (45, 135)
+        self.ACEPTABLE_STANDING_DEGREES2 = (70, 110)
         self.ACEPTABLE_LAYING_DEGREE = ((-30, 30), (-150, 150))
         self.min_height = float('inf')
         self.max_height = 0
@@ -45,7 +46,9 @@ class fallCalculation:
             return False
 
     def isStanding(self):
-        if self.isBetween(self.calculate_degree(self.head, self.foot), self.ACEPTABLE_STANDING_DEGREES[0], self.ACEPTABLE_STANDING_DEGREES[1]):
+        if self.isBetween(self.calculate_degree(self.head, self.hip), self.ACEPTABLE_STANDING_DEGREES[0], self.ACEPTABLE_STANDING_DEGREES[1]) and \
+                self.isBetween(self.calculate_degree(self.hip, self.knee), self.ACEPTABLE_STANDING_DEGREES2[0], self.ACEPTABLE_STANDING_DEGREES2[1]):
+            print(self.calculate_degree(self.head, self.hip), self.calculate_degree(self.hip, self.knee))
             return True
         else:
             return False
@@ -84,7 +87,7 @@ class fallCalculation:
         return self.avg_height
 
     # All the poses
-    def pose0(self):  # Still lying down
+    def pose0(self):  # Lying down
         if self.isLaying():
             return True
         else:
