@@ -4,6 +4,7 @@ from callHelp import callHelp
 
 import cv2
 import time
+import sys
 
 
 class VideoProcessor:
@@ -89,6 +90,7 @@ class VideoProcessor:
                 self.fall_calculator.resetFall_time()
                 self.callHelp.resetCall()
                 self.fall_calculator.setTotalStandToFall_status(True)
+                self.fall_calculator.setHadFallen(False)
             else:
                 if self.fall_calculator.pose0():
                     fallTime = self.fall_calculator.getFall_time()
@@ -97,7 +99,8 @@ class VideoProcessor:
                         self.fall_calculator.setTotalStandToFall_status(False)
                         self.fall_calculator.setTotalStandToFall_time()
 
-                    if self.fall_calculator.getTotalStandToFall_time() < 1:
+                    if self.fall_calculator.getTotalStandToFall_time() < 1 or self.fall_calculator.getHadFallen():
+                        self.fall_calculator.setHadFallen(True)
                         self.pose_detector.draw_bbox(f'Fall ({fallTime:.2f} s)', self.color['red'])
                         if fallTime > 5 and not self.callHelp.isCall():
                             self.callHelp.call()
@@ -124,6 +127,9 @@ class VideoProcessor:
 
 
 if __name__ == '__main__':
-    video_name = 'fall2.mov'
+    if len(sys.argv) > 1:
+        video_name = sys.argv[1]
+    else:
+        video_name = 'fall1.mov'
     video_processor = VideoProcessor(video_name)
     video_processor.run()

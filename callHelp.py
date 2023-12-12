@@ -4,7 +4,10 @@ class callHelp:
 
     def call(self):
         self.callStatus = True
-        print('Calling Help...')
+        print(
+            '==================================================================', end='\n\n')
+        print('Calling Help...', end='\n\n')
+        print('==================================================================')
 
     def resetCall(self):
         self.callStatus = False

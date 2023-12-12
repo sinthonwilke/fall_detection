@@ -23,14 +23,17 @@ class fallCalculation:
         self.lastStandToFallTime = float('inf')
         self.totalStandToFall_time = float('inf')
         self.totalStandToFall_status = True
+        self.hadFallen = False
 
     def calculate_degree(self, point1, point2):
-        angle_radians = math.atan2(point2['y'] - point1['y'], point2['x'] - point1['x'])
+        angle_radians = math.atan2(
+            point2['y'] - point1['y'], point2['x'] - point1['x'])
         angle_degrees = math.degrees(angle_radians)
         return angle_degrees
 
     def calculate_distance(self, point1, point2):
-        distance = math.sqrt((point2['x'] - point1['x'])**2 + (point2['y'] - point1['y'])**2)
+        distance = math.sqrt(
+            (point2['x'] - point1['x'])**2 + (point2['y'] - point1['y'])**2)
         return distance
 
     def isBetween(self, input_angle, lower_bound, upper_bound):
@@ -46,9 +49,7 @@ class fallCalculation:
             return False
 
     def isStanding(self):
-        if self.isBetween(self.calculate_degree(self.head, self.hip), self.ACEPTABLE_STANDING_DEGREES[0], self.ACEPTABLE_STANDING_DEGREES[1]) and \
-                self.isBetween(self.calculate_degree(self.hip, self.knee), self.ACEPTABLE_STANDING_DEGREES2[0], self.ACEPTABLE_STANDING_DEGREES2[1]):
-            print(self.calculate_degree(self.head, self.hip), self.calculate_degree(self.hip, self.knee))
+        if self.isBetween(self.calculate_degree(self.head, self.hip), self.ACEPTABLE_STANDING_DEGREES[0], self.ACEPTABLE_STANDING_DEGREES[1]) and self.isBetween(self.calculate_degree(self.hip, self.knee), self.ACEPTABLE_STANDING_DEGREES2[0], self.ACEPTABLE_STANDING_DEGREES2[1]):
             return True
         else:
             return False
@@ -120,7 +121,8 @@ class fallCalculation:
         return elapsed_time
 
     def setTotalStandToFall_time(self):
-        self.totalStandToFall_time = self.getStandToFall_time() - self.getLastStandToFall_time()
+        self.totalStandToFall_time = self.getStandToFall_time() - \
+            self.getLastStandToFall_time()
 
     def getTotalStandToFall_time(self):
         return self.totalStandToFall_time
@@ -130,3 +132,9 @@ class fallCalculation:
 
     def setTotalStandToFall_status(self, status):
         self.totalStandToFall_status = status
+
+    def setHadFallen(self, status):
+        self.hadFallen = status
+
+    def getHadFallen(self):
+        return self.hadFallen
