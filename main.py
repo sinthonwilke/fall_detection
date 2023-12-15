@@ -81,6 +81,9 @@ class VideoProcessor:
         cv2.destroyAllWindows()
 
     def where_magic_happens(self, frame):
+        ACECEPTED_FALL_TIME = 1
+        FALL_TIME_BEFORE_CALL = 5
+
         if self.pose_detector.detect(frame):
             self.fall_calculator.setValue(self.pose_detector.get_needed_landmarks())
 
@@ -99,10 +102,10 @@ class VideoProcessor:
                         self.fall_calculator.setTotalStandToFall_status(False)
                         self.fall_calculator.setTotalStandToFall_time()
 
-                    if self.fall_calculator.getTotalStandToFall_time() < 1 or self.fall_calculator.getHadFallen():
+                    if self.fall_calculator.getTotalStandToFall_time() < ACECEPTED_FALL_TIME or self.fall_calculator.getHadFallen():
                         self.fall_calculator.setHadFallen(True)
                         self.pose_detector.draw_bbox(f'Fall ({fallTime:.2f} s)', self.color['red'])
-                        if fallTime > 5 and not self.callHelp.isCall():
+                        if fallTime > FALL_TIME_BEFORE_CALL and not self.callHelp.isCall():
                             self.callHelp.call()
                     else:
                         self.pose_detector.draw_bbox('Laying', self.color['orange'])
