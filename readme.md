@@ -26,9 +26,17 @@ pip install -r requirements.txt
 
 ## Usage
 
+
 ```bash
 python main.py [video_name.video_file_name]
 
 ## Example
 python main.py falling.mp4
+```
+Ensure the video file is in the same location as your main.py file.
+```bash
+fall_detection/
+├── main.py
+├── video_name.video_file_name
+└── ...
 ```
