@@ -31,7 +31,7 @@ pip install -r requirements.txt
 python main.py [video_name.video_file_name]
 
 ## Example
-python main.py falling.mp4
+python main.py example.mp4
 ```
 Ensure the video file is in the same location as your main.py file.
 ```bash
