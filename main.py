@@ -13,6 +13,9 @@ class VideoProcessor:
         self.key_delay = 0.06  # Adjust this value to set the key input delay
 
         self.cap = cv2.VideoCapture(video_name)
+        self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
+        self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
+        self.cap.set(cv2.CAP_PROP_POS_FRAMES, 30)
         self.pose_detector = poseDetect()
         self.fall_calculator = fallCalculation()
         self.callHelp = callHelp()
@@ -133,6 +136,6 @@ if __name__ == '__main__':
     if len(sys.argv) > 1:
         video_name = sys.argv[1]
     else:
-        video_name = 'fall1.mp4'
+        video_name = 'example.mp4'
     video_processor = VideoProcessor(video_name)
     video_processor.run()
